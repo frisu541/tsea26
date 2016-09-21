@@ -6,14 +6,14 @@ N=length(x);
 t = (0:N-1)/Fs; % time axis
 
 % Create a low pass filter with a cut-off frequency of 15 Hz
-
 order=31;
-h = fir1(order, FIXME );  % FIXME - Insert the correct value here!
+Wn = 15/(Fs/2); % Cut-off frequency 15 Hz
+h = fir1(order, Wn);  
 
 % Matlab based filtering
 y = filter(h, 1, x);
 
-if exist('IOS0011')
+if exist('IOS0011', 'file')
   y_senior=read_hex('IOS0011');
  else
    fprintf('Warning: IOS0011 output from srsim not found!\n'); 
