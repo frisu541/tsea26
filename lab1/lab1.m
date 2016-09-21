@@ -24,3 +24,7 @@ relerr = visualize_timedomain(x,y,y_senior,t,h);
 fprintf('Relative error of Senior implementation compared to Matlab implementation: %f\n',relerr);
 visualize_freqdomain(x,y,y_senior,t,h,Fs);
 
+fileID = fopen('coeff.txt','w');
+fprintf(fileID,'%s\n','Filter coefficients');
+fprintf(fileID,'%.15f\n', h);
+fclose(fileID);
