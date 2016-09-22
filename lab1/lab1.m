@@ -28,3 +28,16 @@ fileID = fopen('coeff.txt','w');
 fprintf(fileID,'%s\n','Filter coefficients');
 fprintf(fileID,'%.15f\n', h);
 fclose(fileID);
+
+h_fi = fi(h, true, 16, 15);
+h_bin = bin(h_fi);
+h_hex = hex(h_fi);
+
+fileID = fopen('coeff_hex.txt','w');
+fprintf(fileID,'%s\n','Filter coefficients (fixed point 1.15, hex form)');
+for i=1:32
+    pos = (i-1)*7;
+    fprintf(fileID,'	.dw 0x%s\n', h_hex(pos+1:pos+4));
+end
+fclose(fileID);
+
