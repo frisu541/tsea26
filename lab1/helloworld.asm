@@ -6,7 +6,7 @@
 	
 	set   sp,stackarea	; Set the stackpointer
 	
-	;; set   r0,0		; Loop counter
+	set   r0,0		; Loop counter
 	;; set   r1,43		; Loop end
 
 	repeat loop, 43 

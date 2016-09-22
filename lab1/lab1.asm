@@ -196,38 +196,39 @@ coefficients
 ;;;  Hint: You might find it easy to use fprintf() in matlab to
 ;;;  create this part. (fprintf in matlab can handle vectors)
 
-	.dw 32767		;
-	.dw 0x7fff		; Enter hexadecimal number like this
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
-	.dw 0
+	.dw 0x000e
+	.dw 0x0020
+	.dw 0x003f
+	.dw 0x0076
+	.dw 0x00cf
+	.dw 0x014e
+	.dw 0x01f7
+	.dw 0x02c8
+	.dw 0x03bb
+	.dw 0x04c5
+	.dw 0x05d8
+	.dw 0x06e3
+	.dw 0x07d4
+	.dw 0x089a
+	.dw 0x0928
+	.dw 0x0971
+	.dw 0x0971
+	.dw 0x0928
+	.dw 0x089a
+	.dw 0x07d4
+	.dw 0x06e3
+	.dw 0x05d8
+	.dw 0x04c5
+	.dw 0x03bb
+	.dw 0x02c8
+	.dw 0x01f7
+	.dw 0x014e
+	.dw 0x00cf
+	.dw 0x0076
+	.dw 0x003f
+	.dw 0x0020
+	.dw 0x000e
+
 	
 ;;; ----------------------------------------------------------------------
 ;;; Stack space
