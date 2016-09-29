@@ -133,16 +133,23 @@ initfirkernel
 fir_kernel
         ;;; FIXME - You need to implement the rest of this function
 	in r0,0x10		; Read input sample -> r0
+	set r1,0 		
 	
 	set step0,1		; Initiate stepsize for coefficients
 
 	st1 (current_location),r0 ; Store sample into ringbuffer at current_location
+
+	move acr0.l, r1 		; Initiate acr0 to zero
+	move acr0.h, r1
+	move guards01, r1
 	
 	set step1,1		; Initiate stepsize, top address and bottom address for samples
 	set bot1,ringbuffer
 	set top1,top_ringbuffer
+
 	
-	ld0 r0,coefficients  	; Store addresses to coefficients and current location in ringbuffer to ar0 and ar1
+	
+	set r0,coefficients  	; Store addresses to coefficients and current location in ringbuffer to ar0 and ar1
 	ld0 r1,(current_location)
 	move ar0,r0
 	move ar1,r1
@@ -153,10 +160,10 @@ conv_tap
 	
 	move r1, ar1
 	convss acr0,(ar0++),(ar1++%) ; Tap 32 of the convolution
-	
-	move r0,sat rnd acr0 	; Scaling factor? otherwise 31-16
 	st0 (current_location), r1 ; Store value of current location for next call to fir_kernel
-
+	nop
+	move r0,sat rnd acr0 ; Scaling factor? otherwise 31-16
+	nop
 	out 0x11,r0		; Output a sample
 	ret
 	
