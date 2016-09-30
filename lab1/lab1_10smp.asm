@@ -1,7 +1,7 @@
 	.code
 	set sp,stackarea		; We obviously need some space for the stack...
 	
-	set r31,1000
+	set r31,100
 	call initfirkernel
 	call initsanitycheck	; Set up random values in almost all registers
 
@@ -125,36 +125,68 @@ initfirkernel
 ;;; handle_sample above!
 ;;; ----------------------------------------------------------------------
 	.code
-fir_kernel
-    
-	in r0,0x10			; Read next input sample 
+fir_kernel	
 	ld0 r1,(current_location) 	; Load address to current location in ringbuffer	
 	set step1,1		  	; Initiate stepsize for samples
-	move ar1,r1		
-
-	clr acr0 		; Clear acr0
-	st1 (ar1), r0		; Store sample into ringbuffer
-	
+	move ar1,r1	
 	set step0,1		; Initiate stepsize for coefficients
-	set r0, coefficients
 	
-	set bot1,ringbuffer	
+	set bot1,ringbuffer
 	set top1,top_ringbuffer
+;;; 
+	repeat one_sample, 10
 
-	move ar0,r0
-
-	repeat conv_tap, 31 	; Repeat 31 taps of convolution
+	set r1, coefficients
+	in r0,0x10			; Read next input sample
+	move ar0,r1
+	st1 (ar1),r0		; Store sample into ringbuffer
+	clr acr0 		; Clear acr0
+	
+	convus acr0,(ar0++),(ar1++%) ; Repeat 31 taps of convolution
 	convus acr0,(ar0++),(ar1++%)
-conv_tap
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
 	
 	move r1, ar1
 	convus acr0,(ar0++),(ar1++%) ; Tap 32 of the convolution
-	st0 (current_location), r1 ; Store value of current location for next call to fir_kernel
-	
-	ret ds3
+	nop
+	nop
 	move r0,sat rnd div8 acr0 ; Scaling factor, div8 because of scaled coefficients
-	pop r1
+	move ar1, r1 ; Store value of current location for next sample
 	out 0x11,r0		; Output a sample
+one_sample
+
+	st0 (current_location), r1
+	ret ds1
+	pop r1
+
 	
 	
 
