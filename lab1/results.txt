@@ -56,13 +56,35 @@ lab1		125'353
 lab1_perf	14'353
 
 => 111'000 cycles of interruption
-=> 11,1 ms for all interruptions in 10 MHz
+=> 11.1 ms for all interruptions in 10 MHz
 
 => 111 cycles/interrupt
-=> 11,1 us per interrupt handling in 10 MHz
+=> 11.1 us per interrupt handling in 10 MHz
 
 Latency always the same, no conditional jumps
 We can unroll the HW loop to reduce the latency. This would make it possible to the latency with 10 cycles/interrupt;
 - Remove repeat instructions + push/pop of loopn,loopb, loope
 - Add 3 nop
 => 101 cycles/interrupt
+We could also make use of delay slots in call/ret.
+
+**********************************************
+Task 6
+File		Cycles
+lab1_10spm	51'350
+lab1_10perf	1'750
+
+=> 49'600 cycles of interruption
+=> 4.96 ms for all interruptions in 10 MHz
+
+=> 496 cycles/interrupt
+=> 49.6 us per interrupt handling in 10 MHz
+
+The latency differs (10 samples per interrupt). The latency is higher, but the throughput is also higher.
+
+*********************************************
+Task 7
+1. Need for low latency, but not high throughput.
+2. Need for high throughput, but not low latency.
+3. Fast reaction to input.
+4. More forwarding? - reduce nop

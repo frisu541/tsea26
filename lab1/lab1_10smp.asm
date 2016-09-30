@@ -64,8 +64,6 @@ handle_sample
 	
 	call fir_kernel
 
-	pop r0
-	move loope,r1
 	move loopb,r0
 
 	pop r1
@@ -184,8 +182,10 @@ fir_kernel
 one_sample
 
 	st0 (current_location), r1
-	ret ds1
+	ret ds3
 	pop r1
+	pop r0
+	move loope,r1
 
 	
 	
