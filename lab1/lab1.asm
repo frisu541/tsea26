@@ -60,10 +60,6 @@ handle_sample
 	move r1,loope
 	push r0
 	push r1
-
-        ;;;  FIXME - You may want to save other registers here as well.
-        ;;; (Alternatively, you might want to save less registers here in order
-        ;;; to improve the performance if you can get away with it somehow...)
 	
 	call fir_kernel
 
@@ -149,15 +145,15 @@ fir_kernel
 	move ar0,r0
 
 	repeat conv_tap, 31 	; Repeat 31 taps of convolution
-	convss acr0,(ar0++),(ar1++%)
+	convus acr0,(ar0++),(ar1++%)
 conv_tap
 	
 	move r1, ar1
-	convss acr0,(ar0++),(ar1++%) ; Tap 32 of the convolution
+	convus acr0,(ar0++),(ar1++%) ; Tap 32 of the convolution
 	st0 (current_location), r1 ; Store value of current location for next call to fir_kernel
 	nop
 	
-	move r0,sat rnd div4 acr0 ; Scaling factor, div8 because of scaled coefficients, mul2 because of? 
+	move r0,sat rnd div8 acr0 ; Scaling factor, div8 because of scaled coefficients
 	nop
 	
 	out 0x11,r0		; Output a sample
@@ -179,40 +175,39 @@ top_ringbuffer			; Convenient label
 ;;; The filter coefficients should be stored here in read only memory
 ;;; ----------------------------------------------------------------------
 	.rom0
-coefficients			; Scaled by 8
-	.dw 0x0074
-	.dw 0x00fc
-	.dw 0x01f7
-	.dw 0x03b2
-	.dw 0x0674
-	.dw 0x0a6e
-	.dw 0x0fb6
-	.dw 0x163f
-	.dw 0x1dd7
-	.dw 0x2628
-	.dw 0x2ebf
-	.dw 0x3717
-	.dw 0x3ea0
-	.dw 0x44d4
-	.dw 0x493d
-	.dw 0x4b88
-	.dw 0x4b88
-	.dw 0x493d
-	.dw 0x44d4
-	.dw 0x3ea0
-	.dw 0x3717
-	.dw 0x2ebf
-	.dw 0x2628
-	.dw 0x1dd7
-	.dw 0x163f
-	.dw 0x0fb6
-	.dw 0x0a6e
-	.dw 0x0674
-	.dw 0x03b2
-	.dw 0x01f7
-	.dw 0x00fc
-	.dw 0x0074
-
+coefficients			; Unsigned, scaled by 8
+	.dw 0x00e8
+	.dw 0x01f8
+	.dw 0x03ee
+	.dw 0x0765
+	.dw 0x0ce8
+	.dw 0x14dd
+	.dw 0x1f6d
+	.dw 0x2c7f
+	.dw 0x3bae
+	.dw 0x4c50
+	.dw 0x5d7f
+	.dw 0x6e2d
+	.dw 0x7d40
+	.dw 0x89a7
+	.dw 0x927a
+	.dw 0x9711
+	.dw 0x9711
+	.dw 0x927a
+	.dw 0x89a7
+	.dw 0x7d40
+	.dw 0x6e2d
+	.dw 0x5d7f
+	.dw 0x4c50
+	.dw 0x3bae
+	.dw 0x2c7f
+	.dw 0x1f6d
+	.dw 0x14dd
+	.dw 0x0ce8
+	.dw 0x0765
+	.dw 0x03ee
+	.dw 0x01f8
+	.dw 0x00e8
 	
 ;;; ----------------------------------------------------------------------
 ;;; Stack space
