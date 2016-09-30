@@ -131,39 +131,35 @@ initfirkernel
 ;;; ----------------------------------------------------------------------
 	.code
 fir_kernel
-        ;;; FIXME - You need to implement the rest of this function
-	in r0,0x10		; Read input sample -> r0
+    
+	in r0,0x10			; Read next input sample 
+	ld0 r1,(current_location) 	; Load address to current location in ringbuffer	
+	set step1,1		  	; Initiate stepsize for samples
+	move ar1,r1		
+
+	clr acr0 		; Clear acr0
+	st1 (ar1), r0		; Store sample into ringbuffer
 	
-	ld0 r1,(current_location)
-	nop
-	move ar1,r1
-
-	;;  Hint: Remember to set ar0, step0, step1, bot1, and top1
-	;;  appropriately before starting the convolution.
-
-	;; Hint: The syntax of the repeat instruction is:
-	;;     repeat label_at_end_of_loop, number_of_iteration
-
-	;; Hint: For the final iteration you do not want to increment
-	;; the address register that points to the ring buffer. (As
-	;; you want to note the value of the address register at this point
-	;; and save it to current_location.) However, the convss
-	;; instruction forces you to either use a post increment addressing 
-	;; mode or modulo addressing mode.
-	;; 
-	;; You can achieve the same effect by instead copying the value
-	;; just before running the final convss instruction like this:
-	;; 
-	;;     move r5,ar1
-	;;     convss ...  (ar1++%)
-	;;     Store r5 here
+	set step0,1		; Initiate stepsize for coefficients
+	set r0, coefficients
 	
+	set bot1,ringbuffer	
+	set top1,top_ringbuffer
 
-	;; Hint: You may need some scaling in this instruction. Without scaling
-	;; this will move bit 31-16 into r0 (after saturation and rounding)
-	move r0,sat rnd acr0
+	move ar0,r0
+
+	repeat conv_tap, 31 	; Repeat 31 taps of convolution
+	convss acr0,(ar0++),(ar1++%)
+conv_tap
+	
+	move r1, ar1
+	convss acr0,(ar0++),(ar1++%) ; Tap 32 of the convolution
+	st0 (current_location), r1 ; Store value of current location for next call to fir_kernel
 	nop
-
+	
+	move r0,sat rnd div4 acr0 ; Scaling factor, div8 because of scaled coefficients, mul2 because of? 
+	nop
+	
 	out 0x11,r0		; Output a sample
 	ret
 	
@@ -183,51 +179,39 @@ top_ringbuffer			; Convenient label
 ;;; The filter coefficients should be stored here in read only memory
 ;;; ----------------------------------------------------------------------
 	.rom0
-coefficients
-;;;  FIXME: Here you need to fill in the coefficients.
-;;;  Note: For your final solution you need to use .dw here to
-;;;  demonstrate that you understand fixed point twos complement
-;;;  arithmetic. No negative numbers may be entered here! (Hexadecimal
-;;;  numbers are ok though.)
-;;; 
-;;;  Hint: During development you might find it easier to use .df and
-;;;  .scale instead though
-;;; 
-;;;  Hint: You might find it easy to use fprintf() in matlab to
-;;;  create this part. (fprintf in matlab can handle vectors)
-
-	.dw 0x000e
-	.dw 0x0020
-	.dw 0x003f
-	.dw 0x0076
-	.dw 0x00cf
-	.dw 0x014e
+coefficients			; Scaled by 8
+	.dw 0x0074
+	.dw 0x00fc
 	.dw 0x01f7
-	.dw 0x02c8
-	.dw 0x03bb
-	.dw 0x04c5
-	.dw 0x05d8
-	.dw 0x06e3
-	.dw 0x07d4
-	.dw 0x089a
-	.dw 0x0928
-	.dw 0x0971
-	.dw 0x0971
-	.dw 0x0928
-	.dw 0x089a
-	.dw 0x07d4
-	.dw 0x06e3
-	.dw 0x05d8
-	.dw 0x04c5
-	.dw 0x03bb
-	.dw 0x02c8
+	.dw 0x03b2
+	.dw 0x0674
+	.dw 0x0a6e
+	.dw 0x0fb6
+	.dw 0x163f
+	.dw 0x1dd7
+	.dw 0x2628
+	.dw 0x2ebf
+	.dw 0x3717
+	.dw 0x3ea0
+	.dw 0x44d4
+	.dw 0x493d
+	.dw 0x4b88
+	.dw 0x4b88
+	.dw 0x493d
+	.dw 0x44d4
+	.dw 0x3ea0
+	.dw 0x3717
+	.dw 0x2ebf
+	.dw 0x2628
+	.dw 0x1dd7
+	.dw 0x163f
+	.dw 0x0fb6
+	.dw 0x0a6e
+	.dw 0x0674
+	.dw 0x03b2
 	.dw 0x01f7
-	.dw 0x014e
-	.dw 0x00cf
-	.dw 0x0076
-	.dw 0x003f
-	.dw 0x0020
-	.dw 0x000e
+	.dw 0x00fc
+	.dw 0x0074
 
 	
 ;;; ----------------------------------------------------------------------
