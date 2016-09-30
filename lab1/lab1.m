@@ -41,8 +41,11 @@ for i=1:32
 end
 fclose(fileID);
 
-%%
-h8 = h*8;
+%% Signed scaling of coefficients, abs(max(h)*sf) < 1
+hmax = max(abs(h));
+sf = 2^floor(abs(log2(hmax))); % = 8
+
+h8 = h*8; % scaling factor: 8
 
 h8_fi = fi(h8, true, 16, 15);
 h8_hex = hex(h8_fi);
@@ -54,4 +57,21 @@ for i=1:32
     fprintf(fileID,'	.dw 0x%s\n', h8_hex(pos+1:pos+4));
 end
 fclose(fileID);
+
+%% Unsigned scaling of coefficients
+h8_fiu = fi(h8, false, 16, 16);
+h8_hexu = hex(h8_fiu);
+
+fileID = fopen('coeff_hex_mul8_unsigned.txt','w');
+fprintf(fileID,'%s\n','Filter coefficients mul8, unsigned (fixed point 1.15, hex form)');
+for i=1:32
+    pos = (i-1)*7;
+    fprintf(fileID,'	.dw 0x%s\n', h8_hexu(pos+1:pos+4));
+end
+fclose(fileID);
+
+
+
+
+
 
