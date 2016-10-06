@@ -31,6 +31,25 @@
 	;; ...
 
 
+	set	r0,0x8012
+	set	r1,0x3456
+	nop
+	move	acr0.h,r0
+	move	acr0.l,r1
+	set	guards01,0xFFFF
+	nop
+	nop
+	
+	move	r0,acr0	 	 ; r0 = 0x8012
+	move	r1,sat acr0	 ; r1 = 0x8012
+	move	r2,mul2 acr0 	 ; r2 = 0x0024
+	move	r3,sat mul2 acr0 ; r3 = 0x8000
+
+	out	0x11,r0		
+	out	0x11,r1		
+	out	0x11,r2	
+	out	0x11,r3
+	
 	;; terminate simulation
 	out	0x12,r0
 	nop

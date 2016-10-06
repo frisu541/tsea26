@@ -2,6 +2,15 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 quietly virtual signal -install /dsp_system_top/dsp_core/instruction_decoder { /dsp_system_top/dsp_core/instruction_decoder/spr_ctrl_o[4:0]} spr_adr
 quietly virtual function -install /dsp_system_top/dsp_core -env /dsp_system_top/dsp_core/MAC { &{/dsp_system_top/dsp_core/ALU/spr_fl0_extra_store,/dsp_system_top/dsp_core/MAC/flags_reg[3], /dsp_system_top/dsp_core/MAC/flags_reg[2], /dsp_system_top/dsp_core/MAC/flags_reg[1], /dsp_system_top/dsp_core/MAC/flags_reg[0], /dsp_system_top/dsp_core/ALU/flags_reg[3], /dsp_system_top/dsp_core/ALU/flags_reg[2], /dsp_system_top/dsp_core/ALU/flags_reg[1], /dsp_system_top/dsp_core/ALU/flags_reg[0] }} fl0
+
+add wave -noupdate -format Literal -height 15 -label do_sat_i -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/do_sat_i
+add wave -noupdate -format Literal -height 15 -label do_sat_int -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/do_sat_int
+add wave -noupdate -format Literal -height 15 -label did_sat_o -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/did_sat_o
+add wave -noupdate -format Literal -height 15 -label value_i -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/value_i
+add wave -noupdate -format Literal -height 15 -label value_int -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/value_int
+add wave -noupdate -format Literal -height 15 -label value_o -radix hexadecimal /dsp_system_top/dsp_core/MAC/mac_datapath/sat_box/value_o
+add wave -noupdate -divider {BEGIN}
+
 add wave -noupdate -format Logic -height 15 /dsp_system_top/clk
 add wave -noupdate -format Logic -height 15 /dsp_system_top/reset
 add wave -noupdate -divider {INSTR PIPE}
