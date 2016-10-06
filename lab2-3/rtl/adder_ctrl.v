@@ -13,10 +13,9 @@ module adder_ctrl
       case(function_i)
 	3'b000: mx_ctrl = 3'b000; // ADD
 	3'b001: mx_ctrl = 3'b010;// ADDC
-	3'b010, 3'b101: mx_ctrl = 3'b101;// SUB, CMP
+	3'b010, 3'b101, 3'b110, 3'b111: mx_ctrl = 3'b101;// SUB, CMP, MAX, MIN
 	3'b011: mx_ctrl = 3'b110; // SUBC
-	3'b100: mx_ctrl = {opa_sign_i,1'b0, opa_sign_i}; // ABS
-	default: mx_ctrl = 3'b000; // MAX, MIN (don't care)
+	3'b100: mx_ctrl = {opa_sign_i, 1'b0, opa_sign_i}; // ABS
       endcase
    end // always @(*)
 
