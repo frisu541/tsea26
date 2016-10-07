@@ -19,7 +19,7 @@ module saturation
 	2'b10 : value_o = 40'h007fffffff;
 	2'b11 : value_o = 40'hff80000000;
         default : value_o = value_i;
-      endcase // case (did_sat_o)
+      endcase // case({did_sat_o,value_i[39]})
    end // always @ begin
 
 endmodule // saturation
