@@ -25,7 +25,7 @@ module mac_dp
    reg signed [33:0] 	     mul_sig;
 
    reg [39:0] adr_opbrnd_sig, adder_opb, adder_opa, to_scaling,
-              adder_result, mul_guarded_reg, abs_result, round_result;
+              adder_result, mul_guarded_reg, round_result;
    reg 				     adder_cin;
    
    /*AUTOWIRE*/
@@ -145,24 +145,19 @@ module mac_dp
    // (9)
 
    always @* begin // (10)
-      case(c_dornd & adder_opb[15])
+      case(c_dornd)
 	1'b0: round_result=adder_result;
 	1'b1: round_result={adder_result[39:16], 16'b0};
       endcase
    end
-   
 
    // Create some overflow flags. The special checks for overflows
    // when rounding or taking the absolute value can probably be done
-   // in a better way when you refactor the code for lab 2 (Hint: You
-   // can probably remove it altogether...)
-/* -----\/----- EXCLUDED -----\/-----
-   assign add_pos_overflow = (!adder_opa[39] && !adder_opb[39] && adder_result[39]) ||
-			     (c_dornd && (abs_result == 40'h7fffffffff));
-   assign add_neg_overflow = (adder_opa[39] && adder_opb[39] && !adder_result[39]) ||
-			     (c_doabs && (adder_result == 40'h8000000000)); 
- -----/\----- EXCLUDED -----/\----- */
-   
+   // in a better way when you refactor the code for lab 2 
+
+   assign add_pos_overflow = (!adder_opa[39] && !adder_opb[39] && adder_result[39]);
+   assign add_neg_overflow = (adder_opa[39] && adder_opb[39] && !adder_result[39]); 
+
    // Saturation logic (11)
    saturation sat_box(.value_i(round_result[39:0]),
 		      .do_sat_i(c_dosat),
