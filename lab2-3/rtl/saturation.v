@@ -10,7 +10,7 @@ module saturation
    always @(*) begin
       case(value_i[39:31])
 	9'b000000000, 9'b111111111 : did_sat_o = 1'b0;
-	default : did_sat_o = do_sat_i & 1'b1;
+	default : did_sat_o = do_sat_i;
       endcase // case (value_i[39:31])
    end // always @ begin
    
